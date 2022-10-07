@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type responseProtect256 struct {
+type respuestaProteger struct {
 	TextoProtegerOriginal      string
 	TextoProtegerGenerado      string
 	TextoProtegerGeneradoBytes []byte
 	Tiempo                     float64
 }
 
-type responseUnprotect256 struct {
+type respuestaDesproteger struct {
 	TextoDesprotegerOriginal      string
 	TextoDesprotegerGenerado      string
 	TextoDesprotegerGeneradoBytes []byte
@@ -34,20 +34,43 @@ func ProtegerHamming(c *gin.Context) {
 			c.AbortWithError(http.StatusBadRequest, err)
 			return
 		} else {
-			var res = responseProtect256{textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			var res = respuestaProteger{textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo}
 			c.JSON(http.StatusOK, res)
 		}
 	}
 	if parametros["modulo"][0] == "1024" {
-		//hammingservice.ProtectHamming1024(ctx, parametros["file_name"][0])
+		textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.ProtectHamming1024(ctx, parametros["file_name"][0], parametros["introducir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaProteger{textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
 	if parametros["modulo"][0] == "2048" {
-		//hammingservice.ProtectHamming2048(ctx, parametros["file_name"][0])
+		textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.ProtectHamming2048(ctx, parametros["file_name"][0], parametros["introducir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaProteger{textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
 	if parametros["modulo"][0] == "4096" {
-		//hammingservice.ProtectHamming4096(ctx, parametros["file_name"][0])
+		textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.ProtectHamming4096(ctx, parametros["file_name"][0], parametros["introducir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaProteger{textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
-
 }
 
 func DesprotegerHamming(c *gin.Context) {
@@ -61,18 +84,42 @@ func DesprotegerHamming(c *gin.Context) {
 			c.AbortWithError(http.StatusBadRequest, err)
 			return
 		} else {
-			var res = responseUnprotect256{textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			var res = respuestaDesproteger{textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo}
 			c.JSON(http.StatusOK, res)
 		}
 	}
 	if parametros["modulo"][0] == "1024" {
-		//hammingservice.ProtectHamming1024(ctx, parametros["file_name"][0])
+		textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.DesprotegerHamming1024(ctx, parametros["file_name"][0], parametros["corregir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaDesproteger{textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
 	if parametros["modulo"][0] == "2048" {
-		//hammingservice.ProtectHamming2048(ctx, parametros["file_name"][0])
+		textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.DesprotegerHamming2048(ctx, parametros["file_name"][0], parametros["corregir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaDesproteger{textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
 	if parametros["modulo"][0] == "4096" {
-		//hammingservice.ProtectHamming4096(ctx, parametros["file_name"][0])
+		textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.DesprotegerHamming4096(ctx, parametros["file_name"][0], parametros["corregir_error"][0])
+		if tiempo == 0 {
+			err := errors.New("error")
+			c.AbortWithError(http.StatusBadRequest, err)
+			return
+		} else {
+			var res = respuestaDesproteger{textoDesprotegerOriginal, textoDesprotegerGenerado, textoProtegerGeneradoBytes, tiempo}
+			c.JSON(http.StatusOK, res)
+		}
 	}
 
 }

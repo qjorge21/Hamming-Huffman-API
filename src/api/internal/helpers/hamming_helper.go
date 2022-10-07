@@ -193,3 +193,129 @@ func TransformarArregloBooleanosToArregloBytes(arreglo []bool) []byte {
 	}
 	return arregloBytes
 }
+
+func TransformarArreglo1024BooleanosToString(arreglo [1024]bool) string {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		if arreglo[i] {
+			stringByte = stringByte + "1"
+		} else {
+			stringByte = stringByte + "0"
+		}
+		contadorBits = contadorBits + 1
+		if contadorBits == 8 {
+			arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+			stringByte = ""
+			contadorBits = 0
+		}
+	}
+	return string(arregloBytes)
+}
+
+func TransformarArregloModulos1024BooleanosToArregloBytes(arreglo [][1024]bool) []byte {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		for j := 0; j < 1024; j++ {
+			if arreglo[i][j] {
+				stringByte = stringByte + "1"
+			} else {
+				stringByte = stringByte + "0"
+			}
+			contadorBits = contadorBits + 1
+			if contadorBits == 8 {
+				arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+				stringByte = ""
+				contadorBits = 0
+			}
+		}
+	}
+	return arregloBytes
+}
+
+func TransformarArreglo2048BooleanosToString(arreglo [2048]bool) string {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		if arreglo[i] {
+			stringByte = stringByte + "1"
+		} else {
+			stringByte = stringByte + "0"
+		}
+		contadorBits = contadorBits + 1
+		if contadorBits == 8 {
+			arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+			stringByte = ""
+			contadorBits = 0
+		}
+	}
+	return string(arregloBytes)
+}
+
+func TransformarArregloModulos2048BooleanosToArregloBytes(arreglo [][2048]bool) []byte {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		for j := 0; j < 2048; j++ {
+			if arreglo[i][j] {
+				stringByte = stringByte + "1"
+			} else {
+				stringByte = stringByte + "0"
+			}
+			contadorBits = contadorBits + 1
+			if contadorBits == 8 {
+				arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+				stringByte = ""
+				contadorBits = 0
+			}
+		}
+	}
+	return arregloBytes
+}
+
+func TransformarArreglo4096BooleanosToString(arreglo [4096]bool) string {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		if arreglo[i] {
+			stringByte = stringByte + "1"
+		} else {
+			stringByte = stringByte + "0"
+		}
+		contadorBits = contadorBits + 1
+		if contadorBits == 8 {
+			arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+			stringByte = ""
+			contadorBits = 0
+		}
+	}
+	return string(arregloBytes)
+}
+
+func TransformarArregloModulos4096BooleanosToArregloBytes(arreglo [][4096]bool) []byte {
+	var stringByte = ""
+	var contadorBits = 0
+	var arregloBytes []byte
+	for i := 0; i < len(arreglo); i++ {
+		for j := 0; j < 4096; j++ {
+			if arreglo[i][j] {
+				stringByte = stringByte + "1"
+			} else {
+				stringByte = stringByte + "0"
+			}
+			contadorBits = contadorBits + 1
+			if contadorBits == 8 {
+				arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
+				stringByte = ""
+				contadorBits = 0
+			}
+		}
+	}
+	return arregloBytes
+}
