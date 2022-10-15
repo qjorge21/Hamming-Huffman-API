@@ -1,0 +1,6 @@
+The Picture of Dorian Gray (448 KB) - 1.27 seg -> 0.47 seg
+Los Ladrones de Londres (685 KB) - 2.40 seg -> 0.74 seg 
+Una Historia de Dos Ciudades (868 KB) - 3.58 seg -> 0.94 seg
+Crimen y Castigo (1097 KB) - 5.12 seg -> 1.77 seg
+La Regenta (1846 KB) - 11.70 seg -> 1.89 seg
+Don Quijote de la Mancha (2174 KB) - 15.52 seg -> 2.18 seg
