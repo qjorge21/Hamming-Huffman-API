@@ -158,6 +158,8 @@ func ProtectHamming256(ctx context.Context, fileName string, introducir_error st
 		for potenciaDos < MODULO { // Mientras la potencia de dos sea menor a 256
 			var paridad = false
 			for fila := 0; fila < MODULO; fila++ {
+				// recorre cada columna matriz 256
+				// solo hace algo si el valor es un 1
 				if matriz256[fila][columna] { // Recorre la columna que indica qué bits de información deben tenerse en cuenta para calcular la paridad del bit de control
 					if fila != potenciaDos {
 						if arrayModules[modulo][fila] { // Si hay 'true' en la posicion se actualiza el calculo de paridad
@@ -1037,12 +1039,136 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 	*/
 
 	if corregir_error == "true" {
-		// Buscar y corregir error
+		CorregirError256(fileAsBytes)
 	}
 
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
+}
+
+func CorregirError256(archivoBytes []byte) {
+	fileAsBool := CrearArregloBool(archivoBytes)
+
+	cantModulos := CalcularCantidadModulos(fileAsBool, MODULO_256)
+
+	arregloModulos := CrearArregloDeModulos256(fileAsBool, cantModulos)
+
+	fmt.Println(arregloModulos)
+
+	for _, modulo := range arregloModulos {
+		if pos := ChequearErrorModulo256(modulo); pos != -1 {
+			// significa que hay error
+			CorregirErrorModulo256(modulo, pos)
+		}
+	}
+}
+
+func CrearArregloBool(arregloBytes []byte) []bool {
+	byteString := ""
+	indice := 0
+	// 1 byte = 8 bits, bools que necesito
+	arregloBool := make([]bool, len(arregloBytes)*8)
+
+	for _, n := range arregloBytes {
+		// leo el byte como un string
+		byteString = fmt.Sprintf("%08b", n)
+
+		for _, bit := range byteString {
+			if string(bit) == "1" {
+				arregloBool[indice] = true
+			} else {
+				arregloBool[indice] = false
+			}
+			indice++
+		}
+	}
+
+	return arregloBool
+}
+
+func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
+	arregloModulos := make([][256]bool, cantModulos)
+
+	contadorModulo := 0
+
+	// salto cada 256 booleanos
+	for i := 0; i < len(arregloBool); i += 256 {
+		indice := 0
+		// recorro cada "particion" de 256
+		for j := i; j < i+256; j++ {
+			arregloModulos[contadorModulo][indice] = arregloBool[j]
+			indice++
+		}
+		// incremento contador de modulos por cada incremento de 256
+		contadorModulo++
+	}
+
+	return arregloModulos
+}
+
+func CalcularCantidadModulos(fileAsBool []bool, tamModulo int) int {
+	return len(fileAsBool) / tamModulo
+}
+
+func ChequearErrorModulo256(modulo [256]bool) int {
+	pos := -1
+	matriz256 := helpers.GenerarMatriz256()
+
+	// cambiar a cte el size
+	result := make([]bool, 8)
+
+	for columna := 0; columna < 8; columna++ {
+		paridad := false
+		for fila := 0; fila < 256; fila++ {
+			// es true, es decir 1
+			if matriz256[fila][columna] {
+				// es true, es decir 1
+				if modulo[fila] {
+					paridad = true
+				} else {
+					paridad = false
+				}
+			}
+		}
+		result[columna] = paridad
+	}
+
+	result = InvertirOrdenArreglo(result)
+	pos = CalcularValorDecimal(result)
+
+	return pos
+}
+
+func InvertirOrdenArreglo(arr []bool) []bool {
+	result := make([]bool, len(arr))
+
+	indexResult := len(arr)
+
+	for index, _ := range arr {
+		result[index] = arr[indexResult]
+		indexResult--
+	}
+
+	return result
+}
+
+func CalcularValorDecimal(arr []bool) int {
+	resultado := 0
+	potencia := 0
+
+	for index := len(arr) - 1; index >= 0; index-- {
+		if arr[index] {
+			resultado += int(math.Pow(2, float64(potencia)))
+		}
+		potencia++
+	}
+
+	return resultado
+}
+
+func CorregirErrorModulo256(modulo [256]bool, pos int) {
+	modulo[pos] = !modulo[pos]
 }
 
 func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {
