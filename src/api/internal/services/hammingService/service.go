@@ -217,6 +217,7 @@ func ProtectHamming256(ctx context.Context, fileName string, introducir_error st
 			introducirError := r1.Intn(2) // Calcula un random n (donde 0 <= n < 2) que indica si el modulo va a tener error o no
 			if introducirError == 1 {
 				posicionError := r1.Intn(255) + 1 // Calcula un random n (donde 1 <= n < 256) que indica en qué posicion del modulo va a ser el error
+				fmt.Printf("Se introdujo error en el modulo %d y en la posicion %d \n", modulo, posicionError)
 				//str := fmt.Sprintf("Mod: %d, Pos: %d, Bit: %d\n", modulo, posicionError, arrayModules[modulo][posicionError])
 				//fmt.Print(str)
 				arrayModules[modulo][posicionError] = !arrayModules[modulo][posicionError] // Setea el error
@@ -981,6 +982,10 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 	indexInfo := 0
 	controlBytesModulo := 0
 
+	if corregir_error == "true" {
+		fileAsBytes = CorregirError256(fileAsBytes)
+	}
+
 	for _, n := range fileAsBytes {
 		byteObtenido = fmt.Sprintf("%08b", n)
 		for _, value := range byteObtenido {
@@ -1038,30 +1043,30 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 		fmt.Print("\n")
 	*/
 
-	if corregir_error == "true" {
-		CorregirError256(fileAsBytes)
-	}
-
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
 }
 
-func CorregirError256(archivoBytes []byte) {
+func CorregirError256(archivoBytes []byte) []byte {
 	fileAsBool := CrearArregloBool(archivoBytes)
 
 	cantModulos := CalcularCantidadModulos(fileAsBool, MODULO_256)
 
+	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+
 	arregloModulos := CrearArregloDeModulos256(fileAsBool, cantModulos)
 
-	fmt.Println(arregloModulos)
-
-	for _, modulo := range arregloModulos {
-		if pos := ChequearErrorModulo256(modulo); pos != -1 {
+	for indexModulo := 0; indexModulo < cantModulos; indexModulo++ {
+		modulo := arregloModulos[indexModulo]
+		if pos := ChequearErrorModulo256(modulo); pos != 0 {
+			fmt.Printf("Se encontro error en la posicion %d del modulo %d \n", pos, indexModulo)
 			// significa que hay error
-			CorregirErrorModulo256(modulo, pos)
+			CorregirErrorModulo256(arregloModulos, indexModulo, pos)
 		}
 	}
+
+	return helpers.TransformarArregloModulos256BooleanosToArregloBytes(arregloModulos)
 }
 
 func CrearArregloBool(arregloBytes []byte) []bool {
@@ -1112,30 +1117,28 @@ func CalcularCantidadModulos(fileAsBool []bool, tamModulo int) int {
 }
 
 func ChequearErrorModulo256(modulo [256]bool) int {
-	pos := -1
 	matriz256 := helpers.GenerarMatriz256()
 
 	// cambiar a cte el size
 	result := make([]bool, 8)
 
 	for columna := 0; columna < 8; columna++ {
-		paridad := false
+		cantidadDeUnos := 0
 		for fila := 0; fila < 256; fila++ {
 			// es true, es decir 1
 			if matriz256[fila][columna] {
 				// es true, es decir 1
 				if modulo[fila] {
-					paridad = true
-				} else {
-					paridad = false
+					cantidadDeUnos++
 				}
 			}
 		}
-		result[columna] = paridad
+
+		result[columna] = !esPar(cantidadDeUnos)
 	}
 
 	result = InvertirOrdenArreglo(result)
-	pos = CalcularValorDecimal(result)
+	pos := CalcularValorDecimal(result)
 
 	return pos
 }
@@ -1143,7 +1146,7 @@ func ChequearErrorModulo256(modulo [256]bool) int {
 func InvertirOrdenArreglo(arr []bool) []bool {
 	result := make([]bool, len(arr))
 
-	indexResult := len(arr)
+	indexResult := len(arr) - 1
 
 	for index, _ := range arr {
 		result[index] = arr[indexResult]
@@ -1167,8 +1170,12 @@ func CalcularValorDecimal(arr []bool) int {
 	return resultado
 }
 
-func CorregirErrorModulo256(modulo [256]bool, pos int) {
-	modulo[pos] = !modulo[pos]
+func CorregirErrorModulo256(arregloModulos [][256]bool, modulo int, pos int) {
+	arregloModulos[modulo][pos] = !arregloModulos[modulo][pos]
+}
+
+func esPar(numero int) bool {
+	return numero%2 == 0
 }
 
 func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {
