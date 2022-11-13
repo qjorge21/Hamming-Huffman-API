@@ -2,6 +2,7 @@ package hammingservice
 
 import (
 	"Hamming-Huffman-API/src/api/internal/helpers"
+	"Hamming-Huffman-API/src/api/internal/utils"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -1133,49 +1134,17 @@ func ChequearErrorModulo256(modulo [256]bool) int {
 				}
 			}
 		}
-
-		result[columna] = !esPar(cantidadDeUnos)
+		result[columna] = !utils.EsPar(cantidadDeUnos)
 	}
 
-	result = InvertirOrdenArreglo(result)
-	pos := CalcularValorDecimal(result)
+	result = utils.InvertirOrdenArreglo(result)
+	pos := utils.CalcularValorDecimal(result)
 
 	return pos
 }
 
-func InvertirOrdenArreglo(arr []bool) []bool {
-	result := make([]bool, len(arr))
-
-	indexResult := len(arr) - 1
-
-	for index, _ := range arr {
-		result[index] = arr[indexResult]
-		indexResult--
-	}
-
-	return result
-}
-
-func CalcularValorDecimal(arr []bool) int {
-	resultado := 0
-	potencia := 0
-
-	for index := len(arr) - 1; index >= 0; index-- {
-		if arr[index] {
-			resultado += int(math.Pow(2, float64(potencia)))
-		}
-		potencia++
-	}
-
-	return resultado
-}
-
 func CorregirErrorModulo256(arregloModulos [][256]bool, modulo int, pos int) {
 	arregloModulos[modulo][pos] = !arregloModulos[modulo][pos]
-}
-
-func esPar(numero int) bool {
-	return numero%2 == 0
 }
 
 func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {
