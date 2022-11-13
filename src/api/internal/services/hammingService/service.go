@@ -1374,7 +1374,7 @@ func DesprotegerHamming4096(ctx context.Context, fileName string, corregir_error
 	controlBytesModulo := 0
 
 	if corregir_error == "true" {
-		fileAsBytes = CorregirError2048(fileAsBytes)
+		fileAsBytes = CorregirError4096(fileAsBytes)
 	}
 
 	for _, n := range fileAsBytes {
