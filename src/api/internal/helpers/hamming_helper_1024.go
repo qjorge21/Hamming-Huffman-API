@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"Hamming-Huffman-API/src/api/internal/constants"
 	"Hamming-Huffman-API/src/api/internal/utils"
 	"math"
 )
@@ -48,13 +49,13 @@ func CrearArregloDeModulos1024(arregloBool []bool, cantModulos int) [][1024]bool
 }
 
 func ChequearErrorModulo1024(modulo [1024]bool, matriz1024 [1024][10]bool) int {
-	result := make([]bool, TAM_BITS_CONTROL_MODULO_1024)
+	result := make([]bool, constants.TAM_BITS_CONTROL_MODULO_1024)
 
-	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_1024; columna++ {
+	for columna := 0; columna < constants.TAM_BITS_CONTROL_MODULO_1024; columna++ {
 
 		cantidadDeUnos := 0
 
-		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_1024; fila++ {
+		for fila := 0; fila < constants.TAM_BITS_TOTALES_MODULO_1024; fila++ {
 
 			if matriz1024[fila][columna] {
 

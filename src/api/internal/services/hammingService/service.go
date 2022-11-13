@@ -1242,6 +1242,10 @@ func DesprotegerHamming2048(ctx context.Context, fileName string, corregir_error
 	indexInfo := 0
 	controlBytesModulo := 0
 
+	if corregir_error == "true" {
+		fileAsBytes = CorregirError2048(fileAsBytes)
+	}
+
 	for _, n := range fileAsBytes {
 		byteObtenido = fmt.Sprintf("%08b", n)
 		for _, value := range byteObtenido {
@@ -1299,10 +1303,6 @@ func DesprotegerHamming2048(ctx context.Context, fileName string, corregir_error
 		fmt.Print("\n")
 	*/
 
-	if corregir_error == "true" {
-		// Buscar y corregir error
-	}
-
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
@@ -1311,23 +1311,23 @@ func DesprotegerHamming2048(ctx context.Context, fileName string, corregir_error
 func CorregirError2048(archivoBytes []byte) []byte {
 	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
 
-	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_1024)
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_2048)
 
 	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
 
-	arregloModulos := helpers.CrearArregloDeModulos1024(archivoBooleano, cantModulos)
+	arregloModulos := helpers.CrearArregloDeModulos2048(archivoBooleano, cantModulos)
 
-	matriz1024 := helpers.GenerarMatriz1024()
+	matriz2048 := helpers.GenerarMatriz2048()
 
 	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
 		modulo := arregloModulos[indiceModulo]
-		if posicionConError := helpers.ChequearErrorModulo1024(modulo, matriz1024); posicionConError != 0 {
+		if posicionConError := helpers.ChequearErrorModulo2048(modulo, matriz2048); posicionConError != 0 {
 			fmt.Printf("Se encontro error en el modulo %d y en la posicion %d \n", indiceModulo, posicionConError)
-			helpers.CorregirErrorModulo1024(arregloModulos, indiceModulo, posicionConError)
+			helpers.CorregirErrorModulo2048(arregloModulos, indiceModulo, posicionConError)
 		}
 	}
 
-	return helpers.TransformarArregloModulos1024BooleanosToArregloBytes(arregloModulos)
+	return helpers.TransformarArregloModulos2048BooleanosToArregloBytes(arregloModulos)
 }
 
 func DesprotegerHamming4096(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {

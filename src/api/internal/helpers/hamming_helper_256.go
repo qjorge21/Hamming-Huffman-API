@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"Hamming-Huffman-API/src/api/internal/constants"
 	"Hamming-Huffman-API/src/api/internal/utils"
 	"math"
 )
@@ -48,13 +49,13 @@ func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
 }
 
 func ChequearErrorModulo256(modulo [256]bool, matriz256 [256][8]bool) int {
-	result := make([]bool, TAM_BITS_CONTROL_MODULO_256)
+	result := make([]bool, constants.TAM_BITS_CONTROL_MODULO_256)
 
-	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_256; columna++ {
+	for columna := 0; columna < constants.TAM_BITS_CONTROL_MODULO_256; columna++ {
 
 		cantidadDeUnos := 0
 
-		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_256; fila++ {
+		for fila := 0; fila < constants.TAM_BITS_TOTALES_MODULO_256; fila++ {
 
 			if matriz256[fila][columna] {
 

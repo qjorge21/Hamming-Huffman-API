@@ -73,7 +73,7 @@ func ChequearErrorModulo2048(modulo [2048]bool, matriz1024 [2048][11]bool) int {
 	return pos
 }
 
-func CorregirErrorModulo2048(arregloModulos [][1024]bool, modulo int, pos int) {
+func CorregirErrorModulo2048(arregloModulos [][2048]bool, modulo int, pos int) {
 	arregloModulos[modulo][pos] = !arregloModulos[modulo][pos]
 }
 
