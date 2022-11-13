@@ -1174,6 +1174,25 @@ func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
 }
 
+func CorregirError1024(archivoBytes []byte) []byte {
+	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
+
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_1024)
+
+	arregloModulos := helpers.CrearArregloDeModulos1024(archivoBooleano, cantModulos)
+
+	matriz1024 := helpers.GenerarMatriz1024()
+
+	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
+		modulo := arregloModulos[indiceModulo]
+		if posicionConError := helpers.ChequearErrorModulo1024(modulo, matriz1024); posicionConError != 0 {
+			helpers.CorregirErrorModulo1024(arregloModulos, indiceModulo, posicionConError)
+		}
+	}
+
+	return helpers.TransformarArregloModulos1024BooleanosToArregloBytes(arregloModulos)
+}
+
 func DesprotegerHamming2048(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {
 	// Iniciar el timer
 	start := time.Now()

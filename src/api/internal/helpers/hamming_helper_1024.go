@@ -5,13 +5,13 @@ import (
 	"math"
 )
 
-func GenerarMatriz256() [256][8]bool {
-	var matriz [256][8]bool
+func GenerarMatriz1024() [1024][10]bool {
+	var matriz [1024][10]bool
 	var salto = 1
-	for columna := 0; columna < 8; columna++ {
+	for columna := 0; columna < 10; columna++ {
 		var fila = int(math.Pow(2, float64(columna)))
 		var control_salto, saltados = 0, 0
-		for ; fila < 256; fila++ {
+		for ; fila < 1024; fila++ {
 			if salto == control_salto {
 				if salto == saltados {
 					matriz[fila][columna] = true
@@ -29,15 +29,15 @@ func GenerarMatriz256() [256][8]bool {
 	return matriz
 }
 
-func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
-	arregloModulos := make([][256]bool, cantModulos)
+func CrearArregloDeModulos1024(arregloBool []bool, cantModulos int) [][1024]bool {
+	arregloModulos := make([][1024]bool, cantModulos)
 
 	contadorModulo := 0
 
-	for i := 0; i < len(arregloBool); i += 256 {
+	for i := 0; i < len(arregloBool); i += 1024 {
 		indice := 0
 
-		for j := i; j < i+256; j++ {
+		for j := i; j < i+1024; j++ {
 			arregloModulos[contadorModulo][indice] = arregloBool[j]
 			indice++
 		}
@@ -47,16 +47,16 @@ func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
 	return arregloModulos
 }
 
-func ChequearErrorModulo256(modulo [256]bool, matriz256 [256][8]bool) int {
-	result := make([]bool, TAM_BITS_CONTROL_MODULO_256)
+func ChequearErrorModulo1024(modulo [1024]bool, matriz1024 [1024][10]bool) int {
+	result := make([]bool, TAM_BITS_CONTROL_MODULO_1024)
 
-	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_256; columna++ {
+	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_1024; columna++ {
 
 		cantidadDeUnos := 0
 
-		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_256; fila++ {
+		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_1024; fila++ {
 
-			if matriz256[fila][columna] {
+			if matriz1024[fila][columna] {
 
 				if modulo[fila] {
 					cantidadDeUnos++
@@ -72,16 +72,16 @@ func ChequearErrorModulo256(modulo [256]bool, matriz256 [256][8]bool) int {
 	return pos
 }
 
-func CorregirErrorModulo256(arregloModulos [][256]bool, modulo int, pos int) {
+func CorregirErrorModulo1024(arregloModulos [][1024]bool, modulo int, pos int) {
 	arregloModulos[modulo][pos] = !arregloModulos[modulo][pos]
 }
 
-func TransformarArregloModulos256BooleanosToArregloBytes(arreglo [][256]bool) []byte {
+func TransformarArregloModulos1024BooleanosToArregloBytes(arreglo [][1024]bool) []byte {
 	var stringByte = ""
 	var contadorBits = 0
 	var arregloBytes []byte
 	for i := 0; i < len(arreglo); i++ {
-		for j := 0; j < 256; j++ {
+		for j := 0; j < 1024; j++ {
 			if arreglo[i][j] {
 				stringByte = stringByte + "1"
 			} else {
