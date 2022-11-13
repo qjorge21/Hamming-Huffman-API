@@ -1371,6 +1371,10 @@ func DesprotegerHamming4096(ctx context.Context, fileName string, corregir_error
 	indexInfo := 0
 	controlBytesModulo := 0
 
+	if corregir_error == "true" {
+		fileAsBytes = CorregirError2048(fileAsBytes)
+	}
+
 	for _, n := range fileAsBytes {
 		byteObtenido = fmt.Sprintf("%08b", n)
 		for _, value := range byteObtenido {
@@ -1428,11 +1432,29 @@ func DesprotegerHamming4096(ctx context.Context, fileName string, corregir_error
 		fmt.Print("\n")
 	*/
 
-	if corregir_error == "true" {
-		// Buscar y corregir error
-	}
-
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
+}
+
+func CorregirError4096(archivoBytes []byte) []byte {
+	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
+
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_4096)
+
+	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+
+	arregloModulos := helpers.CrearArregloDeModulos4096(archivoBooleano, cantModulos)
+
+	matriz4096 := helpers.GenerarMatriz4096()
+
+	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
+		modulo := arregloModulos[indiceModulo]
+		if posicionConError := helpers.ChequearErrorModulo4096(modulo, matriz4096); posicionConError != 0 {
+			fmt.Printf("Se encontro error en el modulo %d y en la posicion %d \n", indiceModulo, posicionConError)
+			helpers.CorregirErrorModulo4096(arregloModulos, indiceModulo, posicionConError)
+		}
+	}
+
+	return helpers.TransformarArregloModulos4096BooleanosToArregloBytes(arregloModulos)
 }
