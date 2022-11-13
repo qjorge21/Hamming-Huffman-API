@@ -1108,6 +1108,10 @@ func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error
 	indexInfo := 0
 	controlBytesModulo := 0
 
+	if corregir_error == "true" {
+		fileAsBytes = CorregirError1024(fileAsBytes)
+	}
+
 	for _, n := range fileAsBytes {
 		byteObtenido = fmt.Sprintf("%08b", n)
 		for _, value := range byteObtenido {
@@ -1164,10 +1168,6 @@ func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error
 		}
 		fmt.Print("\n")
 	*/
-
-	if corregir_error == "true" {
-		// Buscar y corregir error
-	}
 
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
