@@ -1,6 +1,7 @@
 package hammingservice
 
 import (
+	"Hamming-Huffman-API/src/api/internal/constants"
 	"Hamming-Huffman-API/src/api/internal/helpers"
 	"context"
 	"fmt"
@@ -1052,7 +1053,7 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 func CorregirError256(archivoBytes []byte) []byte {
 	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
 
-	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_256)
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_256)
 
 	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
 
@@ -1181,7 +1182,7 @@ func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error
 func CorregirError1024(archivoBytes []byte) []byte {
 	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
 
-	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_1024)
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_1024)
 
 	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
 
@@ -1305,6 +1306,28 @@ func DesprotegerHamming2048(ctx context.Context, fileName string, corregir_error
 	elapsed := time.Since(start).Seconds()
 	//fmt.Printf("Tiempo transcurrido TOTAL: %s\n", elapsed)
 	return string(fileAsBytes), textoDesprotegido, textoDesprotegerGeneradoBytes, elapsed
+}
+
+func CorregirError2048(archivoBytes []byte) []byte {
+	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
+
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, constants.TAM_BITS_TOTALES_MODULO_1024)
+
+	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+
+	arregloModulos := helpers.CrearArregloDeModulos1024(archivoBooleano, cantModulos)
+
+	matriz1024 := helpers.GenerarMatriz1024()
+
+	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
+		modulo := arregloModulos[indiceModulo]
+		if posicionConError := helpers.ChequearErrorModulo1024(modulo, matriz1024); posicionConError != 0 {
+			fmt.Printf("Se encontro error en el modulo %d y en la posicion %d \n", indiceModulo, posicionConError)
+			helpers.CorregirErrorModulo1024(arregloModulos, indiceModulo, posicionConError)
+		}
+	}
+
+	return helpers.TransformarArregloModulos1024BooleanosToArregloBytes(arregloModulos)
 }
 
 func DesprotegerHamming4096(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {

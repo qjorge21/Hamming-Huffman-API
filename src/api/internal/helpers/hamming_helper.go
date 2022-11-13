@@ -5,30 +5,6 @@ import (
 	"math"
 )
 
-func GenerarMatriz2048() [2048][11]bool {
-	var matriz [2048][11]bool
-	var salto = 1
-	for columna := 0; columna < 11; columna++ {
-		var fila = int(math.Pow(2, float64(columna)))
-		var control_salto, saltados = 0, 0
-		for ; fila < 2048; fila++ {
-			if salto == control_salto {
-				if salto == saltados {
-					matriz[fila][columna] = true
-					control_salto, saltados = 1, 0
-				} else {
-					saltados++
-				}
-			} else {
-				matriz[fila][columna] = true
-				control_salto++
-			}
-		}
-		salto = salto * 2
-	}
-	return matriz
-}
-
 func GenerarMatriz4096() [4096][12]bool {
 	var matriz [4096][12]bool
 	var salto = 1
@@ -163,28 +139,6 @@ func TransformarArreglo2048BooleanosToString(arreglo [2048]bool) string {
 		}
 	}
 	return string(arregloBytes)
-}
-
-func TransformarArregloModulos2048BooleanosToArregloBytes(arreglo [][2048]bool) []byte {
-	var stringByte = ""
-	var contadorBits = 0
-	var arregloBytes []byte
-	for i := 0; i < len(arreglo); i++ {
-		for j := 0; j < 2048; j++ {
-			if arreglo[i][j] {
-				stringByte = stringByte + "1"
-			} else {
-				stringByte = stringByte + "0"
-			}
-			contadorBits = contadorBits + 1
-			if contadorBits == 8 {
-				arregloBytes = append(arregloBytes, byte(TransformarStringByteToDecimal(stringByte)))
-				stringByte = ""
-				contadorBits = 0
-			}
-		}
-	}
-	return arregloBytes
 }
 
 func TransformarArreglo4096BooleanosToString(arreglo [4096]bool) string {
