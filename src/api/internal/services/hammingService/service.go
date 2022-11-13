@@ -2,7 +2,6 @@ package hammingservice
 
 import (
 	"Hamming-Huffman-API/src/api/internal/helpers"
-	"Hamming-Huffman-API/src/api/internal/utils"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -1050,94 +1049,22 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 }
 
 func CorregirError256(archivoBytes []byte) []byte {
-	archivoBooleano := CrearArregloBool(archivoBytes)
+	archivoBooleano := helpers.TransformarArregloBytesToArregloBool(archivoBytes)
 
-	cantModulos := CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_256)
+	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_256)
 
-	arregloModulos := CrearArregloDeModulos256(archivoBooleano, cantModulos)
+	arregloModulos := helpers.CrearArregloDeModulos256(archivoBooleano, cantModulos)
+
+	matriz256 := helpers.GenerarMatriz256()
 
 	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
 		modulo := arregloModulos[indiceModulo]
-		if posicionConError := ChequearErrorModulo256(modulo); posicionConError != 0 {
-			CorregirErrorModulo256(arregloModulos, indiceModulo, posicionConError)
+		if posicionConError := helpers.ChequearErrorModulo256(modulo, matriz256); posicionConError != 0 {
+			helpers.CorregirErrorModulo256(arregloModulos, indiceModulo, posicionConError)
 		}
 	}
 
 	return helpers.TransformarArregloModulos256BooleanosToArregloBytes(arregloModulos)
-}
-
-func CrearArregloBool(arregloBytes []byte) []bool {
-	byteString := ""
-	indice := 0
-	// 1 byte = 8 bits, bools que necesito
-	arregloBool := make([]bool, len(arregloBytes)*8)
-
-	for _, n := range arregloBytes {
-		// leo el byte como un string
-		byteString = fmt.Sprintf("%08b", n)
-
-		for _, bit := range byteString {
-			if string(bit) == "1" {
-				arregloBool[indice] = true
-			} else {
-				arregloBool[indice] = false
-			}
-			indice++
-		}
-	}
-
-	return arregloBool
-}
-
-func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
-	arregloModulos := make([][256]bool, cantModulos)
-
-	contadorModulo := 0
-
-	for i := 0; i < len(arregloBool); i += 256 {
-		indice := 0
-
-		for j := i; j < i+256; j++ {
-			arregloModulos[contadorModulo][indice] = arregloBool[j]
-			indice++
-		}
-		contadorModulo++
-	}
-
-	return arregloModulos
-}
-
-func CalcularCantidadModulos(fileAsBool []bool, tamModulo int) int {
-	return len(fileAsBool) / tamModulo
-}
-
-func ChequearErrorModulo256(modulo [256]bool) int {
-	matriz256 := helpers.GenerarMatriz256()
-
-	result := make([]bool, TAM_BITS_CONTROL_MODULO_256)
-
-	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_256; columna++ {
-		cantidadDeUnos := 0
-		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_256; fila++ {
-			// es true, es decir 1
-			if matriz256[fila][columna] {
-				// es true, es decir 1
-				if modulo[fila] {
-					cantidadDeUnos++
-				}
-			}
-		}
-		result[columna] = !utils.EsPar(cantidadDeUnos)
-	}
-
-	result = utils.InvertirOrdenArreglo(result)
-	pos := utils.CalcularValorDecimal(result)
-
-	return pos
-}
-
-func CorregirErrorModulo256(arregloModulos [][256]bool, modulo int, pos int) {
-	arregloModulos[modulo][pos] = !arregloModulos[modulo][pos]
 }
 
 func DesprotegerHamming1024(ctx context.Context, fileName string, corregir_error string) (string, string, []byte, float64) {

@@ -30,6 +30,7 @@ func TestCalcularCantidadModulos(t *testing.T) {
 	}
 }
 
+/*
 func TestCrearArregloBool(t *testing.T) {
 	type args struct {
 		arregloBytes []byte
@@ -66,6 +67,8 @@ func TestCrearArregloBool(t *testing.T) {
 		})
 	}
 }
+
+
 
 func TestCrearArregloDeModulos256(t *testing.T) {
 
@@ -145,3 +148,5 @@ func convertirStringArregloBool(str string) []bool {
 
 	return result
 }
+
+*/
