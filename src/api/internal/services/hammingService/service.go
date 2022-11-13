@@ -1050,20 +1050,16 @@ func DesprotegerHamming256(ctx context.Context, fileName string, corregir_error 
 }
 
 func CorregirError256(archivoBytes []byte) []byte {
-	fileAsBool := CrearArregloBool(archivoBytes)
+	archivoBooleano := CrearArregloBool(archivoBytes)
 
-	cantModulos := CalcularCantidadModulos(fileAsBool, MODULO_256)
+	cantModulos := CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_256)
 
-	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+	arregloModulos := CrearArregloDeModulos256(archivoBooleano, cantModulos)
 
-	arregloModulos := CrearArregloDeModulos256(fileAsBool, cantModulos)
-
-	for indexModulo := 0; indexModulo < cantModulos; indexModulo++ {
-		modulo := arregloModulos[indexModulo]
-		if pos := ChequearErrorModulo256(modulo); pos != 0 {
-			fmt.Printf("Se encontro error en la posicion %d del modulo %d \n", pos, indexModulo)
-			// significa que hay error
-			CorregirErrorModulo256(arregloModulos, indexModulo, pos)
+	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
+		modulo := arregloModulos[indiceModulo]
+		if posicionConError := ChequearErrorModulo256(modulo); posicionConError != 0 {
+			CorregirErrorModulo256(arregloModulos, indiceModulo, posicionConError)
 		}
 	}
 
@@ -1098,15 +1094,13 @@ func CrearArregloDeModulos256(arregloBool []bool, cantModulos int) [][256]bool {
 
 	contadorModulo := 0
 
-	// salto cada 256 booleanos
 	for i := 0; i < len(arregloBool); i += 256 {
 		indice := 0
-		// recorro cada "particion" de 256
+
 		for j := i; j < i+256; j++ {
 			arregloModulos[contadorModulo][indice] = arregloBool[j]
 			indice++
 		}
-		// incremento contador de modulos por cada incremento de 256
 		contadorModulo++
 	}
 
@@ -1120,12 +1114,11 @@ func CalcularCantidadModulos(fileAsBool []bool, tamModulo int) int {
 func ChequearErrorModulo256(modulo [256]bool) int {
 	matriz256 := helpers.GenerarMatriz256()
 
-	// cambiar a cte el size
-	result := make([]bool, 8)
+	result := make([]bool, TAM_BITS_CONTROL_MODULO_256)
 
-	for columna := 0; columna < 8; columna++ {
+	for columna := 0; columna < TAM_BITS_CONTROL_MODULO_256; columna++ {
 		cantidadDeUnos := 0
-		for fila := 0; fila < 256; fila++ {
+		for fila := 0; fila < TAM_BITS_TOTALES_MODULO_256; fila++ {
 			// es true, es decir 1
 			if matriz256[fila][columna] {
 				// es true, es decir 1
