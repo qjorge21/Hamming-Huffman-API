@@ -452,6 +452,7 @@ func ProtectHamming1024(ctx context.Context, fileName string, introducir_error s
 				posicionError := r1.Intn(1023) + 1 // Calcula un random n, donde 1 <= n < 1024
 				//str := fmt.Sprintf("Mod: %d, Pos: %d, Bit: %d\n", modulo, posicionError, arrayModules[modulo][posicionError])
 				//fmt.Print(str)
+				fmt.Printf("Se introdujo error en el modulo %d y en la posicion %d \n", modulo, posicionError)
 				arrayModules[modulo][posicionError] = !arrayModules[modulo][posicionError]
 				//str = fmt.Sprintf("Bit: %d\n", arrayModules[modulo][posicionError])
 				//fmt.Print(str)
@@ -1053,6 +1054,8 @@ func CorregirError256(archivoBytes []byte) []byte {
 
 	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_256)
 
+	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+
 	arregloModulos := helpers.CrearArregloDeModulos256(archivoBooleano, cantModulos)
 
 	matriz256 := helpers.GenerarMatriz256()
@@ -1060,6 +1063,7 @@ func CorregirError256(archivoBytes []byte) []byte {
 	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
 		modulo := arregloModulos[indiceModulo]
 		if posicionConError := helpers.ChequearErrorModulo256(modulo, matriz256); posicionConError != 0 {
+			fmt.Printf("Se encontro error en el modulo %d y en la posicion %d \n", indiceModulo, posicionConError)
 			helpers.CorregirErrorModulo256(arregloModulos, indiceModulo, posicionConError)
 		}
 	}
@@ -1179,6 +1183,8 @@ func CorregirError1024(archivoBytes []byte) []byte {
 
 	cantModulos := helpers.CalcularCantidadModulos(archivoBooleano, TAM_BITS_TOTALES_MODULO_1024)
 
+	fmt.Printf("Cantidad de modulos calculada: %d \n", cantModulos)
+
 	arregloModulos := helpers.CrearArregloDeModulos1024(archivoBooleano, cantModulos)
 
 	matriz1024 := helpers.GenerarMatriz1024()
@@ -1186,6 +1192,7 @@ func CorregirError1024(archivoBytes []byte) []byte {
 	for indiceModulo := 0; indiceModulo < cantModulos; indiceModulo++ {
 		modulo := arregloModulos[indiceModulo]
 		if posicionConError := helpers.ChequearErrorModulo1024(modulo, matriz1024); posicionConError != 0 {
+			fmt.Printf("Se encontro error en el modulo %d y en la posicion %d \n", indiceModulo, posicionConError)
 			helpers.CorregirErrorModulo1024(arregloModulos, indiceModulo, posicionConError)
 		}
 	}
