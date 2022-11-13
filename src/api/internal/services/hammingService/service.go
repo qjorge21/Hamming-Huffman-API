@@ -684,6 +684,7 @@ func ProtectHamming2048(ctx context.Context, fileName string, introducir_error s
 				posicionError := r1.Intn(2047) + 1 // Calcula un random n, donde 1 <= n < 2048
 				//str := fmt.Sprintf("Mod: %d, Pos: %d, Bit: %d\n", modulo, posicionError, arrayModules[modulo][posicionError])
 				//fmt.Print(str)
+				fmt.Printf("Se introdujo error en el modulo %d y en la posicion %d \n", modulo, posicionError)
 				arrayModules[modulo][posicionError] = !arrayModules[modulo][posicionError]
 				//str = fmt.Sprintf("Bit: %d\n", arrayModules[modulo][posicionError])
 				//fmt.Print(str)
@@ -914,6 +915,7 @@ func ProtectHamming4096(ctx context.Context, fileName string, introducir_error s
 				posicionError := r1.Intn(4095) + 1 // Calcula un random n, donde 1 <= n < 4096
 				//str := fmt.Sprintf("Mod: %d, Pos: %d, Bit: %d\n", modulo, posicionError, arrayModules[modulo][posicionError])
 				//fmt.Print(str)
+				fmt.Printf("Se introdujo error en el modulo %d y en la posicion %d \n", modulo, posicionError)
 				arrayModules[modulo][posicionError] = !arrayModules[modulo][posicionError]
 			}
 		}
