@@ -27,6 +27,8 @@ func ProtegerHamming(c *gin.Context) {
 	ctx := c.Request.Context()
 	parametros := c.Request.URL.Query()
 
+	// TODO: agregar controles de parametros de entrada
+	// posible mejora: llevar parametros de url en el body
 	if parametros["modulo"][0] == "256" {
 		textoProtegerOriginal, textoProtegerGenerado, textoProtegerGeneradoBytes, tiempo := hammingservice.ProtectHamming256(ctx, parametros["file_name"][0], parametros["introducir_error"][0])
 		if tiempo == 0 {
